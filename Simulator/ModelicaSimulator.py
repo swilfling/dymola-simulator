@@ -27,7 +27,7 @@ class ModelicaSimulator:
     - get_plot_dir
     - model_name_full
     - get_start_time
-    - get_stop_tim
+    - get_stop_time
     Setters:
     - set_start_time
     - set_stop_time
