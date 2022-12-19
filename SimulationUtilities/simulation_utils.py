@@ -127,3 +127,17 @@ def label_list_to_str(labels):
 
 def create_time_axis_days(index, divider=3600 * 24):
     return [val.total_seconds() / divider for val in index]
+
+
+def create_input_array(input_parameters={}, num_intervals=1):
+    """
+    Create simulation input array with constant values
+    @param input_parmaeters: dictionary - {input feature name: value}
+    @parm num_intervals: Number of simulation timesteps
+    """
+    input_data = np.ndarray(shape=((len(input_parameters), num_intervals)),
+                            dtype=np.dtype([(name, np.float32) for name in input_parameters.keys()]))
+    for name, val in input_parameters.items():
+        input_data[name] = val
+
+    return input_data
