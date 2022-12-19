@@ -17,7 +17,7 @@ class FMPYSimulator(ModelicaSimulator):
     """
     fmu_dir = ""
     fmu_filename = ""
-    fmu_instance_name = ""
+    fmu_instance_name = "UUT"
     input_data = None
     input_feature_names = []
     output_feature_names = []
@@ -25,13 +25,15 @@ class FMPYSimulator(ModelicaSimulator):
     fmu_ = None
     start_values_ = None
 
-    def __init__(self, fmu_filename="", input_feature_names=None, output_feature_names=None, input_data=None, fmu_instance_name="", **kwargs):
+    def __init__(self, fmu_filename="", input_feature_names=None, output_feature_names=None, input_data=None, fmu_instance_name="UUT",
+                 init_vals=None, **kwargs):
         super().__init__(**kwargs)
         self.input_data = input_data
         self.fmu_filename = fmu_filename
         self.input_feature_names = input_feature_names
         self.output_feature_names = output_feature_names
         self.fmu_instance_name = fmu_instance_name
+        self.start_values_ = init_vals
 
     def _get_simulation_results(self, trajectory_names, **kwargs):
         """
@@ -69,8 +71,9 @@ class FMPYSimulator(ModelicaSimulator):
         Instantiate FMU and create start values
         """
         self.fmu_ = self._extract_and_instantiate_FMU()
-        init_values = self.input_data[0] if not self.init_params.use_init_values else list(self.init_params.init_variables.values())
-        self.start_values_ = {name: init_values[name] for name in self.input_feature_names + self.output_feature_names}
+        if self.start_values_ is None:
+            init_values = self.input_data[0] if not self.init_params.use_init_values else list(self.init_params.init_variables.values())
+            self.start_values_ = {name: init_values[name] for name in self.input_feature_names + self.output_feature_names}
 
     def _simulate_model(self, **kwargs):
         """
